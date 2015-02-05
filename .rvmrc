@@ -1,0 +1,4 @@
+rvm ruby-2.1.5@chainreactor --create
+
+# https://github.com/rails/spring#walkthrough
+export PATH=./bin:$PATH
