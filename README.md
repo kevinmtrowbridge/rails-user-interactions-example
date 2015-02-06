@@ -1,6 +1,5 @@
 ## Examples copy-pasted from test/models/user_test.rb
 
-```
 setup do
   %w(Noah Liam Jacob Mason William Ethan Michael Alexander Jayden Daniel).each do |boy|
     User.create(:username => boy, :gender => "M", :seeking => ["M", "F"].sample)
@@ -36,4 +35,3 @@ test "#requestable_users, outgoing_denied_users do not appear" do
   alice.outgoing_denied_users.include?(bob)
   bob.incoming_denied_users.include?(alice)
 end
-```
