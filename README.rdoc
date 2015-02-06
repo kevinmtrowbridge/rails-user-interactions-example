@@ -1,28 +1,39 @@
-== README
+## Examples copy-pasted from test/models/user_test.rb
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+```
+setup do
+  %w(Noah Liam Jacob Mason William Ethan Michael Alexander Jayden Daniel).each do |boy|
+    User.create(:username => boy, :gender => "M", :seeking => ["M", "F"].sample)
+  end
 
-Things you may want to cover:
+  %w(Sophia Emma Olivia Isabella Ava Mia Emily Abigail Madison Elizabeth).each do |girl|
+    User.create(:username => girl, :gender => "F", :seeking => ["M", "F"].sample)
+  end
+end
 
-* Ruby version
+test "#requestable_users scope does not include self" do
+  u = User.first
+  assert !u.requestable_users.include?(u)
+end
 
-* System dependencies
+test "#requestable_users scope includes only users of 'seeking' gender" do
+  u = User.first
+  requested_genders = u.requestable_users.collect{|u| u.gender}.uniq
+  assert requested_genders.count == 1
+  assert requested_genders[0] == u.seeking
+end
 
-* Configuration
+test "#requestable_users, outgoing_denied_users do not appear" do
+  alice = User.first
+  bob = alice.requestable_users.first
 
-* Database creation
+  assert alice.requestable_users.include?(bob)
 
-* Database initialization
+  interaction = Interaction.create(:from_user => alice, :to_user => bob)
+  interaction.deny
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+  assert !alice.requestable_users.include?(bob)
+  alice.outgoing_denied_users.include?(bob)
+  bob.incoming_denied_users.include?(alice)
+end
+```

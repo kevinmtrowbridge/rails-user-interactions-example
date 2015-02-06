@@ -34,6 +34,7 @@ class User < ActiveRecord::Base
   has_many :incoming_confirmed_users, :through => :incoming_confirmed_interactions, :source => :from_user
 
   def requestable_users
-    User.where "id NOT IN (?)", [self.id] + self.outgoing_requested_users.select(:id) + self.incoming_requested_users.select(:id)
+    non_requestable_ids = [self.id] + self.outgoing_requested_users.select(:id) + self.incoming_requested_users.select(:id)
+    User.where("id NOT IN (?) AND gender = ?", non_requestable_ids, self.seeking)
   end
 end

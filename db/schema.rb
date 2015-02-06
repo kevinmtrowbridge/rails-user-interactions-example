@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 20150205225047) do
     t.string  "username"
     t.string  "gender"
     t.string  "seeking"
-    t.integer "age"
     t.integer "daily_interactions_remaining"
   end
 
